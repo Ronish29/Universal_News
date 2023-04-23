@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "360100526347",
+    "project_id": "universal-news-189d5",
+    "storage_bucket": "universal-news-189d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360100526347:android:59a6b633ae90c3147aca0e",
+        "android_client_info": {
+          "package_name": "com.example.universalnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360100526347-2kvpkpppru8q6t6g4seegk8m3muvkgt7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2itxAk1gLSo5BcFd9W_Xvs6-nsaz-Fl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360100526347-2kvpkpppru8q6t6g4seegk8m3muvkgt7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
