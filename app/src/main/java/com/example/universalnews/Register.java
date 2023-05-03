@@ -1,23 +1,40 @@
 package com.example.universalnews;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class Register extends Fragment {
     private Button loginButton;
+    Button submit;
+    EditText name,email,mobile_no,password,cnf_password;
+    DatabaseReference database=FirebaseDatabase.getInstance().getReference();
+    String emailPattern="[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    boolean validEmail=false;
 
     public Register() {
         // Required empty public constructor
@@ -72,6 +89,12 @@ public class Register extends Fragment {
 
         // Get reference to sign up button
         loginButton = view.findViewById(R.id.button5);
+        submit=view.findViewById(R.id.button4);
+        name=view.findViewById(R.id.editTextTextPersonName4);
+        email=view.findViewById(R.id.editTextTextPersonName2);
+        mobile_no=view.findViewById(R.id.editphone);
+        password=view.findViewById(R.id.pass);
+        cnf_password=view.findViewById(R.id.confirm_pass);
 
         // Set onClickListener on sign up button
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +111,156 @@ public class Register extends Fragment {
                 transaction.commit();
             }
         });
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Validate()&& validEmail){
+                    String mobile=mobile_no.getText().toString();
+                    database.child("users").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.hasChild(mobile)){
+                                Toast.makeText(getContext(), "Phone Number is Already Registred", Toast.LENGTH_SHORT).show();
+                            }else {
+//                    Toast.makeText(getContext(), "All Validation are true", Toast.LENGTH_SHORT).show();
+                                database.child("users").child(mobile).child("Name").setValue(name.getText().toString());
+                                database.child("users").child(mobile).child("Email").setValue(email.getText().toString());
+                                database.child("users").child(mobile).child("Mobile").setValue(mobile);
+                                database.child("users").child(mobile).child("Password").setValue(password.getText().toString());
+                                Toast.makeText(getContext(), "Registration is Done", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getContext(), HomeActivity.class);
+                                startActivity(intent);
+                            }
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            }
+        });
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                name.setBackground(getResources().getDrawable(R.drawable.round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                email.setBackground(getResources().getDrawable(R.drawable.round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        mobile_no.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mobile_no.setBackground(getResources().getDrawable(R.drawable.round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                password.setBackground(getResources().getDrawable(R.drawable.round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        cnf_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                cnf_password.setBackground(getResources().getDrawable(R.drawable.round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return view;
+    }
+    private boolean Validate(){
+        if(name.getText().toString().isEmpty()){
+            name.setBackground(getResources().getDrawable(R.drawable.invalid));
+            name.setError("Name is Required");
+            return false;
+        }
+        if(email.getText().toString().isEmpty()){
+            email.setBackground(getResources().getDrawable(R.drawable.invalid));
+            email.setError("Email is Required");
+            return false;
+        }
+        String email_text=email.getText().toString().trim();
+        if(email_text.matches(emailPattern)){
+            validEmail=true;
+        }
+        if(mobile_no.getText().toString().isEmpty()){
+            mobile_no.setBackground(getResources().getDrawable(R.drawable.invalid));
+            mobile_no.setError("Mobile Number is required");
+            return false;
+        }else if(mobile_no.getText().length()<10){
+            mobile_no.setError("Mobile Number is Invalid");
+            return false;
+        }
+        if(password.getText().toString().isEmpty()){
+            password.setBackground(getResources().getDrawable(R.drawable.invalid));
+            password.setError("Password is Required");
+            return false;
+        }
+        if(cnf_password.getText().toString().isEmpty()){
+            cnf_password.setBackground(getResources().getDrawable(R.drawable.invalid));
+            cnf_password.setError("Confirm Password is Required");
+            return false;
+        }
+        if(!password.getText().toString().equals(cnf_password.getText().toString())){
+            cnf_password.setError("Confirm Password is Not Match");
+            return false;
+        }
+        return true;
     }
 }

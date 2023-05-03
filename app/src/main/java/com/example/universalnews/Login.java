@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 public class Login extends Fragment {
     private ImageButton google_login;
     private Button signUpButton;
+    private Button login;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     private int[] colors = {Color.parseColor("#09CCC8"), Color.parseColor("#ffd6d3"),
@@ -97,6 +98,13 @@ public class Login extends Fragment {
         // Get reference to sign up button
         signUpButton = view.findViewById(R.id.button3);
         google_login= view.findViewById(R.id.google);
+        login=view.findViewById(R.id.button2);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         // Set onClickListener on sign up button
         signUpButton.setOnClickListener(new View.OnClickListener() {
